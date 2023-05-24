@@ -20,7 +20,7 @@ classifier = pipeline("sentiment-analysis", model=model_id)
 # star loop
 user_input = "start"
 while len(user_input) > 0:
-    user_input = input("Enter some text (or empty to end): ")
+    user_input = input("\nEnter some text (or empty to end): ")
     sentiment_score = classifier(user_input)
     print("Sentiment score:", sentiment_score)
 
