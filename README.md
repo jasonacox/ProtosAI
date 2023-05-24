@@ -35,7 +35,7 @@ Sentiment score: [{'label': 'neutral', 'score': 0.6040788292884827}]
 
 The `summary.py` script takes a text file input and uses the summarization model to produce a single paragraph summary.
 
-```text
+`
 $ python3 summary.py pottery.txt                                     master
 Loading transformer...
 
@@ -49,4 +49,4 @@ Text:  The key to becoming a great artist, writer, musician, etc., is to keep cr
 Number of lines: 1
 Number of words: 49
 Number of characters: 299
-```
+`
