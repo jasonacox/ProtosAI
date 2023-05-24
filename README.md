@@ -35,8 +35,8 @@ Sentiment score: [{'label': 'neutral', 'score': 0.6040788292884827}]
 
 The `summary.py` script takes a text file input and uses the summarization model to produce a single paragraph summary.
 
-`
-$ python3 summary.py pottery.txt                                     master
+```text
+$ python3 summary.py pottery.txt                                     
 Loading transformer...
 
 Reading pottery.txt...
@@ -45,8 +45,11 @@ Number of words: 566
 Number of characters: 3416
 
 Summarizing...
-Text:  The key to becoming a great artist, writer, musician, etc., is to keep creating! Keep drawing, keep writing, keep playing! Quality emerges from the quantity of practice and continuous learning that makes them more perfect . The prize of perfection comes by delivering and learning, says Jason Cox .
+Text:  The key to becoming a great artist, writer, musician, etc., is to keep creating!
+Keep drawing, keep writing, keep playing! Quality emerges from the quantity of practice
+and continuous learning that makes them more perfect . The prize of perfection comes by
+delivering and learning, says Jason Cox .
 Number of lines: 1
 Number of words: 49
 Number of characters: 299
-`
+```
