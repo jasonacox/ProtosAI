@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 Transcribe Audio File into Text
 

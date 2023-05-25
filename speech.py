@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 Convert Text to Speech
 
@@ -18,10 +19,8 @@ import wave
 import time
 import sys
 
-# Input
+# Input Default
 say1 = "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
-say2 = "I'm sorry, Dave, I'm afraid I can't do that."
-say3 = "I fight for the users."
 
 filename = "output.wav"
 
