@@ -14,7 +14,7 @@ from transformers import pipeline
 import sys
 
 # load models
-print("Loading transformer...")
+print("\n\nLoading transformer...")
 model_id = "sshleifer/distilbart-cnn-12-6"
 summarizer = pipeline("summarization", model=model_id)
 
