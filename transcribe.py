@@ -15,7 +15,8 @@ def transcribe(filename):
     print("\nLoading model...")
     pipe = pipeline(model="facebook/wav2vec2-base-960h")
     print(f"\nTranscribing {filename}...")
-    transcript = pipe(filename, chunk_length_s=10)
+    transcript = pipe(filename, chunk_length_s=10, stride_length_s=(4, 2))
+    # stride_length_s is a tuple of the left and right stride length.
     print(transcript['text'])
 
 if __name__ == '__main__':
