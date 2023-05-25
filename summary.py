@@ -9,15 +9,21 @@ https://github.com/jasonacox/ProtosAI
 This uses the HuggingFace transformer https://huggingface.co/
 
 """
-
-# imports
-from transformers import pipeline
+# import
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+import transformers
+transformers.logging.set_verbosity_error()
 import sys
 
+# title
+print("Summarizer")
+
 # load models
-print("\n\nLoading transformer...")
+print("\nLoading transformer...")
 model_id = "sshleifer/distilbart-cnn-12-6"
-summarizer = pipeline("summarization", model=model_id)
+print(f" * {model_id}")
+summarizer = transformers.pipeline("summarization", model=model_id)
 
 # read text file
 def read_text_file(file_path):

@@ -9,8 +9,16 @@ https://github.com/jasonacox/ProtosAI
 This uses a HuggingFace transformer https://huggingface.co/
 
 """
+# disable warnings
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+import transformers
+transformers.logging.set_verbosity_error()
+
 import sys
 from transformers import pipeline
+
+
 
 def transcribe(filename):
     print("\nLoading model...")
