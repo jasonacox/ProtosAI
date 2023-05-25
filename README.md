@@ -68,3 +68,23 @@ Loading model...
 Transcribing test.wav...
 HELLO THIS IS A TEST
 ```
+
+## Text to Speech
+
+The `speech.py` script converts a text string into an audio file.  A sample output is [output.wav](output.wav). The script requires additional libraries:
+
+```bash
+pip install espnet torchaudio sentencepiece
+```
+
+```text
+$ python3 speech.py
+
+Loading models...
+
+Converting text to speech...
+
+Writing to audio.wav...
+
+Speaking: Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+```
