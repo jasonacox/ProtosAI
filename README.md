@@ -2,9 +2,11 @@
 
 A Study in Artificial Intelligence
 
+This project consist of a collection of scripts that explore capabilities provided by neural networks pre-trained transformers. These scripts are based on the Hugging Face (https://huggingface.co/) models.  
+
 ## Setup
 
-These scripts are based on the Hugging Face (https://huggingface.co/) models.  Setup required:
+Setup required for these scripts:
 
 ```bash
 pip install transformers datasets
@@ -52,4 +54,17 @@ delivering and learning, says Jason Cox .
 Number of lines: 1
 Number of words: 49
 Number of characters: 299
+```
+
+## Transcribe
+
+The `transcribe.py` script takes an audio file (mp3 or wav file) and uses a speech model to produce a basic text transcription. A additional tool `record.py` will use your laptops microphone to record your dictation into `audio.wav` that can be used by `transcribe.py`.
+
+```text
+$ python3 transcribe.py test.wav
+
+Loading model...
+
+Transcribing test.wav...
+HELLO THIS IS A TEST
 ```
