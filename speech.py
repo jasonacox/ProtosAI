@@ -36,10 +36,6 @@ def play_audio(filename):
     stream.close()
     p.terminate()
 
-if __name__ == '__main__':
-    filename = 'audio.wav'  # Change this to your desired filename
-   
-
 # Load models
 print("\nLoading models...")
 processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts")
