@@ -12,7 +12,6 @@ Specify
 import pyaudio
 import wave
 import sys
-from transformers import pipeline
 
 def record_audio(filename, duration):
     chunk = 1024
@@ -51,13 +50,6 @@ def record_audio(filename, duration):
     wf.setframerate(fs)
     wf.writeframes(b''.join(frames))
     wf.close()
-
-def transcribe(filename):
-    print("\nLoading model...")
-    pipe = pipeline(model="facebook/wav2vec2-base-960h")
-    print("\nTranscribing...")
-    transcript = pipe(filename)
-    print(transcript)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
