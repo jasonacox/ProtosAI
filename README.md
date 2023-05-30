@@ -80,7 +80,7 @@ The `speech.py` script converts a text string into an audio file.  A sample outp
 
 ```bash
 brew install portaudio  # MacOS requires portaudio
-pip install espnet torchaudio sentencepiece
+pip install espnet torchaudio sentencepiece pyaudio
 ```
 
 ```text
