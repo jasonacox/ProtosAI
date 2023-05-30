@@ -94,3 +94,20 @@ Writing to audio.wav...
 
 Speaking: Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
 ```
+
+## Handwriting to Text
+
+The `handwriting.py` script converts an image to a string of text. A sample image `test.png` run is below:
+
+```text
+$ python3 handwriting.py test.png
+Converting image to text: test.png
+
+Loading transformer...
+ * microsoft/trocr-base-handwritten
+
+Analyzing handwriting from test.png...
+
+Resulting text:
+This is a test - can you read this?
+```
