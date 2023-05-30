@@ -99,15 +99,17 @@ Speaking: Perfection is achieved, not when there is nothing more to add, but whe
 
 The `handwriting.py` script converts an image to a string of text. A sample image `test.png` run is below:
 
+![test.png](test.png)
+
 ```text
-$ python3 handwriting.py test.png
-Converting image to text: test.png
+$ python3 handwriting.py testx.png
+Converting image to text: testx.png
 
 Loading transformer...
  * microsoft/trocr-base-handwritten
 
-Analyzing handwriting from test.png...
+Analyzing handwriting from testx.png...
 
 Resulting text:
-This is a test - can you read this?
+This is a test-Can you read this?
 ```
