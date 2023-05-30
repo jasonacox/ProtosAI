@@ -97,7 +97,7 @@ Speaking: Perfection is achieved, not when there is nothing more to add, but whe
 
 ## Handwriting to Text
 
-The `handwriting.py` script converts an image to a string of text. 
+The `handwriting.py` script converts an image of a handwritten single line of text to a string of text.
 
 ![test.png](test.png)
 
