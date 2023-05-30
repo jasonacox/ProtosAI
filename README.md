@@ -9,6 +9,7 @@ This project consist of a collection of scripts that explore capabilities provid
 Setup required for these scripts:
 
 ```bash
+# Requirements
 pip install transformers datasets
 pip install torch
 ```
@@ -61,7 +62,7 @@ Number of characters: 299
 The `transcribe.py` script takes an audio file (mp3 or wav file) and uses a speech model to produce a basic text transcription. A additional tool `record.py` will use your laptops microphone to record your dictation into `audio.wav` that can be used by `transcribe.py`.
 
 ```bash
-# Requires ffmpeg
+# Requirements
 brew install ffmpeg           
 ```
 
@@ -79,6 +80,7 @@ HELLO THIS IS A TEST
 The `speech.py` script converts a text string into an audio file.  A sample output is [output.wav](output.wav). The script requires additional libraries:
 
 ```bash
+# Requirements
 brew install portaudio  # MacOS requires portaudio
 pip install espnet torchaudio sentencepiece pyaudio
 ```
@@ -98,6 +100,11 @@ Speaking: Perfection is achieved, not when there is nothing more to add, but whe
 ## Handwriting to Text
 
 The `handwriting.py` script converts an image of a handwritten single line of text to a string of text.
+
+```bash
+# Requirements
+pip install image
+```
 
 ![test.png](test.png)
 
