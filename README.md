@@ -97,6 +97,9 @@ Writing to audio.wav...
 Speaking: Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
 ```
 
+https://github.com/jasonacox/ProtosAI/assets/836718/56759007-90b6-4d94-83f2-3cc3cb78ccbe
+
+
 ## Handwriting to Text
 
 The `handwriting.py` script converts an image of a handwritten single line of text to a string of text.
