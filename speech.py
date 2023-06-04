@@ -49,7 +49,7 @@ print("\nLoading models...")
 print(" * microsoft/speecht5_tts")
 processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts")
 model = SpeechT5ForTextToSpeech.from_pretrained("microsoft/speecht5_tts")
-print(" * speecht5_hifigan")
+print(" * microsoft/speecht5_hifigan")
 vocoder = SpeechT5HifiGan.from_pretrained("microsoft/speecht5_hifigan")
 
 def speak(say):
