@@ -158,3 +158,15 @@ Answer: {
   }
 }
 ```
+
+## GPT-2 Text Generation
+
+The `gpt-2.py` script uses the gpt2-xl model to generate test based on a prompt.
+
+```bash
+$ python3 gpt-2.py   
+```
+
+```json
+[{'generated_text': "Hello, I'm a language model, but what I do you need to know isn't that hard. But if you want to understand us, you"}, {'generated_text': "Hello, I'm a language model, this is my first commit and I'd like to get some feedback to see if I understand this commit.\n"}, {'generated_text': "Hello, I'm a language model, and I'll guide you on your journey!\n\nLet's get to it.\n\nBefore we start"}, {'generated_text': 'Hello, I\'m a language model, not a developer." If everything you\'re learning about code is through books, you\'ll never get to know about'}, {'generated_text': 'Hello, I\'m a language model, please tell me what you think!" – I started out on this track, and now I am doing a lot'}]
+```
