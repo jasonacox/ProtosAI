@@ -77,7 +77,7 @@ HELLO THIS IS A TEST
 
 ## Text to Speech
 
-The `speech.py` script converts a text string into an audio file.  A sample output is [output.wav](output.wav). The script requires additional libraries:
+The `speech.py` script converts a text string into an audio file.  The script requires additional libraries:
 
 ```bash
 # Requirements
