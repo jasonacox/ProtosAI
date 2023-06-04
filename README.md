@@ -123,3 +123,38 @@ Analyzing handwriting from test.png...
 Resulting text:
 This is a test-Can you read this?
 ```
+
+## OpenAI Test
+
+The openai.py script prompts the OpenAI gpt-3.5 model and prints the response.
+
+```bash
+# Requirements
+pip install openai
+
+# Test
+$ python3 gpt.py
+What do you want to ask? Can you say something to inspire engineers?
+
+Answer: {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Of course! Here's a quote to inspire engineers:\n\n\"Engineering is not only about creating solutions, it's about creating a better world. Every time you solve a problem, you make the world a little bit better.\" - Unknown\n\nAs an engineer, you have the power to make a positive impact on society through your work. Whether you're designing new technologies, improving existing systems, or solving complex problems, your contributions are essential to advancing our world. So keep pushing the boundaries of what's possible, and never forget the impact that your work can have on the world around you.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1685856679,
+  "id": "chatcmpl-7Nach0z2sJQ5FzZOVl6jZWPU4O6zV",
+  "model": "gpt-3.5-turbo-0301",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 117,
+    "prompt_tokens": 26,
+    "total_tokens": 143
+  }
+}
+```
