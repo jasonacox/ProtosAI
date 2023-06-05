@@ -18,9 +18,7 @@ print(f" {torch.__version__}")
 print()
 print("GPU Details")
 
-if not torch.cuda.is_available():
-    print("   ** No GPU support found **")
-else:
+if torch.cuda.is_available():
     # Get number of GPUs available
     gpus = torch.cuda.device_count()
 
@@ -46,3 +44,13 @@ else:
     print(f"   GPU Memory: {gpu_mem} GB") 
     print('   Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
     print('   Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
+
+# Check PyTorch has access to MPS (Metal Performance Shader, Apple's GPU architecture)
+if torch.backends.mps.is_available():
+    print("   Device: Apple Silicon Found")   
+    print(f"   MPS (Metal Performance Shader) built: {torch.backends.mps.is_built()}")
+    print(f"   MPS available: {torch.backends.mps.is_available()}")
+
+# No GPUs Available
+if not (torch.cuda.is_available() or torch.backends.mps.is_available()):
+    print("   ** No GPU support found **")

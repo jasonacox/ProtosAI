@@ -80,3 +80,17 @@ Memory
    Allocated: 0.0 GB
    Cached:    0.0 GB
 ```
+
+### Apple MPS (Metal Performance Shader)
+
+If you have an Apple Silicon processor (e.g. M1), PyTorch can use the built in MPS (Metal Performance Shader, Apple's GPU architecture).  PyTorch supports this with the latest builds.
+
+```bash
+pip3 install torch torchvision torchaudio
+```
+
+Run the `gpu.py` to test.
+
+```
+
+```
