@@ -64,3 +64,19 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 ```
 
 3. Test - run the `gpu.py` script.
+
+```
+GPU Information for PyTorch
+   Version of torch:  2.0.1+rocm5.4.2
+
+GPU Details
+   Device #0: AMD Radeon RX 5700 XT
+   Type: cuda
+   GPUs: 1
+
+Memory
+   Global Free Memory: 7.984375 GB
+   GPU Memory: 7.984375 GB
+   Allocated: 0.0 GB
+   Cached:    0.0 GB
+```
