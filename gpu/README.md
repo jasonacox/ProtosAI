@@ -20,7 +20,7 @@ GPU Details
 
 Test the `gpu.py` script to see if your PyTorch installation already supports your GPU. If not, the steps below may help.
 
-### PyTorch Support for GPUs
+## PyTorch Support for GPUs
 
 See the PyTorch friendly setup matrix here: https://pytorch.org/get-started/locally/
 
@@ -28,7 +28,7 @@ See the PyTorch friendly setup matrix here: https://pytorch.org/get-started/loca
 * AMD GPUs use the ROCm (Radeon Open Compute) library
 * Apple Silicon M1/M2 GPUs use the Metal framework and PyTorch uses Apple’s Metal Performance Shaders (MPS) as a backend
 
-### PyTorch Support for AMD GPUs
+### AMD - ROCm
 
 If you have an AMD GPU, you will need to install and configure PyTorch to use the ROCm API for these AMD GPUs.
 
