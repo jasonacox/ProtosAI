@@ -24,7 +24,7 @@ Test the `gpu.py` script to see if your PyTorch installation already supports yo
 
 See the PyTorch friendly setup matrix here: https://pytorch.org/get-started/locally/
 
-* Nvidia GPUs use the CUDA library
+* Nvidia GPUs use the CUDA (Compute Unified Device Architecture) library
 * AMD GPUs use the ROCm (Radeon Open Compute) library
 * Apple Silicon M1/M2 GPUs use the Metal framework and PyTorch uses Apple’s Metal Performance Shaders (MPS) as a backend
 
