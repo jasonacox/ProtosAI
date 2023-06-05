@@ -85,12 +85,20 @@ Memory
 
 If you have an Apple Silicon processor (e.g. M1), PyTorch can use the built in MPS (Metal Performance Shader, Apple's GPU architecture).  PyTorch supports this with the latest builds.
 
+1. Install PyTorch
 ```bash
 pip3 install torch torchvision torchaudio
 ```
 
-Run the `gpu.py` to test.
+2. Test - run the `gpu.py` script.
 
+Example
 ```
+GPU Information for PyTorch
+   Version of torch:  2.0.1
 
+GPU Details
+   Device: Apple Silicon Found
+   MPS (Metal Performance Shader) built: True
+   MPS available: True
 ```
