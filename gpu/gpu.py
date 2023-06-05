@@ -13,6 +13,12 @@ This is a simple GPU test for PyTorch workloads.
 print("GPU Information for PyTorch")
 print("   Version of torch: ",end="")
 import torch
+import os
+
+# AMD ROCm requires environmental override to prevent segfault
+if "rocm" in torch.__version__:
+    os.environ["HSA_OVERRIDE_GFX_VERSION"] = "10.3.0"
+    sim = "(ROCm)"
 
 print(f" {torch.__version__}")
 print()
@@ -26,9 +32,6 @@ if torch.cuda.is_available():
     deviceno = torch.cuda.current_device() 
     name = torch.cuda.get_device_name(deviceno)
 
-    # Setting ro GPU if available, else CPU
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
     # Returns the global free and total GPU memory occupied for a given device using cudaMemGetInfo.
     (mem_free,gpu_mem) = torch.cuda.mem_get_info()
 
@@ -36,7 +39,7 @@ if torch.cuda.is_available():
     gpu_mem = gpu_mem / 1024**3
 
     print(f"   Device #{deviceno}: {name}")
-    print(f"   Type: {device}")
+    print(f"   Type: cuda {sim}")
     print(f"   GPUs: {gpus}")
     print()
     print("Memory")
@@ -59,7 +62,7 @@ if not (torch.cuda.is_available() or torch.backends.mps.is_available()):
     print("   Device: CPU")  
     torch_device = torch.device("cpu")
 
-# Run a simple test
+# Run a simple PyTorch test
 print()
 print(f"PyTorch Test with {torch_device} - Random 4x4 Array\n")
 random_array = torch.randint(low=0, high=10000, size=(4, 4), device=torch_device)

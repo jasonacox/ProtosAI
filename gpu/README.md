@@ -63,7 +63,12 @@ Example for Ubuntu 22.04
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2
 ```
 
-3. Test - run the `gpu.py` script.
+3. Test - run the `gpu.py` script. Note that some torch commands seem to segfault on the ROCm version.  You can set an environmental variable to fix that. The `gpu.py` script set this in the python code.
+
+```bash
+# Use this export if you get a segfault running Torch functions
+export HSA_OVERRIDE_GFX_VERSION=10.3.0
+```
 
 ```
 GPU Information for PyTorch
@@ -71,7 +76,7 @@ GPU Information for PyTorch
 
 GPU Details
    Device #0: AMD Radeon RX 5700 XT
-   Type: cuda
+   Type: cuda (ROCm)
    GPUs: 1
 
 Memory
@@ -79,6 +84,13 @@ Memory
    GPU Memory: 7.984375 GB
    Allocated: 0.0 GB
    Cached:    0.0 GB
+
+PyTorch Test with cuda - Random 4x4 Array
+
+tensor([[1561, 2237, 6565, 4058],
+        [5793, 8552, 6102, 1498],
+        [ 167, 7648,  333, 4254],
+        [4603, 9456, 6009, 6043]], device='cuda:0')
 ```
 
 ### Apple MPS (Metal Performance Shader)
@@ -101,4 +113,11 @@ GPU Details
    Device: Apple Silicon Found
    MPS (Metal Performance Shader) built: True
    MPS available: True
+
+PyTorch Test with mps - Random 4x4 Array
+
+tensor([[1647,  740, 6492, 2094],
+        [1884, 4286, 2299, 2086],
+        [5135, 5838, 1956, 6912],
+        [8681, 5118, 6668,  925]], device='mps:0')
 ```
