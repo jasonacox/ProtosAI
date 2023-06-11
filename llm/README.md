@@ -1,12 +1,29 @@
 # LLM Examples
 
-## Training
+## Bigram Model
 
-This experiment uses the introductory training model based on the lecture and work by Andrej Karpathy and his nanoGPT project (https://github.com/karpathy/nanoGPT). I adjusted the training model to use the GPT tokenization method (tiktoken) for the word embedding.
+This experiment uses the introductory training model based on the lecture and work by Andrej Karpathy and his nanoGPT project (https://github.com/karpathy/nanoGPT). I adjusted the training model to use the GPT tokenization method (tiktoken) for word embedding. It uses a Bigram Language model which simply looks at previous word to determine the next.
 
-I took the raw text from my blog (jasonacox.com) and used that as the training set. I used an M1 iMac and set the device to `mps` (Apple Silicon Metal Performance Shaders) for the PyTorch settings.  Using 50,000 iterations, it ran for several hours and produced an output of random musing. While there was quite a bit of nonsensical output, I was amazed at how well this small run did at learning basic sentance structure and even picked up on my style. Here are some samples from the output I found entertaining, comical and spot on:
+I took the [raw text](https://github.com/jasonacox/ProtosAI/files/11715802/input.txt) (468K) from my blog ([jasonacox.com](https://www.jasonacox.com/)) and used that as the training set. I created a simple [clean.py](clean.py) script to remove any special characters from the text. Since the training would run on my M1 iMac, I edited [bigram.py](bigram.py) and added `device = 'mps'` to set it to use the MPS (Apple Silicon Metal Performance Shaders) for the PyTorch acceleration.  
 
-* It’s a lot of time… But I think we also need science. I’ve want to do what matters.
+### Code
+
+```bash
+# grab text
+wget https://github.com/jasonacox/ProtosAI/files/11715163/jason.txt 
+
+# clean the input
+python clean.py jason.txt input.txt
+
+# run model
+python bigram.py
+```
+
+The training ran for 50,000 iterations and took about 8 hours. It produced an output of random musing. While there was quite a bit of nonsensical output, I was amazed at how well this small run did at learning words, basic sentence structure and even picked up on my style. Here are some samples from the output I found interesting, comical and sometimes, spot on:
+
+### Example Output
+
+* It’s a lot of time… But I think we also need science.
 * What are your big ideas?  
 * Set our management to the adjacent ground (GND) pin.
 * I have a task to Disneyland out that this day.
@@ -18,11 +35,54 @@ I took the raw text from my blog (jasonacox.com) and used that as the training s
 * Curl has the ability to provide timing data for DNS lookup, it will easily show or avoided.
 * Imperfect things with a positive ingredient can become a positive difference, just get that time.
 * I also believe we should exploit the fusion power that shows up each day in our company’s data.
-* Have you found a vulnerability?  Are you concerned about some missing measures or designs that should be modernized or addressed?  If so, don’t wait, raise those issues.  Speak up and act.  You can make a difference.
-* “I know what you are thinking.” the irony
-* We are the ones who make a brighter day, so let’s start giving.
+* Have you found a vulnerability? Are you concerned about some missing measures or designs that should be modernized or addressed? If so, don’t wait, raise those issues. Speak up and act. You can make a difference.
+* "I know what you are thinking." the irony
+* We are the ones who make a brighter day.
 * The journey ahead is ahead.
 * What are you penning today? What adventures are you crafting by your doing? Get up, get moving… keep writing.
-* The kids used the entire space to explore get the power of joy.  Be on the lookout beautiful.
 
-The raw input was small (473k) and a bit messy.  It had some random code and maker project details that should be cleaned up. But overall, I'm impressed with the results. Next step is to see if I can figure out finetuning and how to handle prompting (prompt encoding).
+### Summary
+
+The raw input was small (468K) and a bit messy.  It had some random code and maker project details that should be cleaned up. But overall, I'm impressed with the results. Next step is to see if I can figure out fine-tuning and how to handle prompting (prompt encoding).
+
+## nanoGPT Model
+
+I have included a fork of Andrej Karpathy's nanoGPT here to help with the next example. In this example, similar to the Bigram test above, I will use the [raw text](https://github.com/jasonacox/ProtosAI/files/11715802/input.txt) (468K) from my blog (jasonacox.com) and used that as the training set.
+
+The first step was to prepare the input. 
+
+```bash
+# tokenize the raw text for the model
+cd data/jasonacox
+wget https://github.com/jasonacox/ProtosAI/files/11715802/input.txt
+python prepare.py
+cd ..
+
+# run the training (make sure to time it)
+time python3 train.py \
+    --dataset=jasonacox \
+    --n_layer=4 \
+    --n_head=4 \
+    --n_embd=64 \
+    --compile=False \
+    --eval_iters=1 \
+    --block_size=64 \
+    --batch_size=8 \
+    --device=mps # for Apple Silicon or change to cpu or cuda
+```
+
+### Example Output
+
+...
+
+### Summary
+
+...
+
+## References
+
+* Video: Let's build GPT: from scratch, in code, spelled out by Andrej Karpathy - https://youtu.be/kCc8FmEb1nY
+* nanoGPT repo: https://github.com/karpathy/nanoGPT
+* Video: Building makemore by Andrej Karpathy - https://youtu.be/PaCmpygFfXo
+* Running nanoGPT on a MacBook M2 to generate terrible Shakespeare
+https://til.simonwillison.net/llms/nanogpt-shakespeare-m2

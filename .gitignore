@@ -2,3 +2,8 @@ big_audio.mp3
 sandbox/
 output.wav
 .DS_Store
+train.bin
+val.bin
+.gitignore
+jason.txt
+input.txt
