@@ -16,6 +16,7 @@ import torch
 import os
 
 # AMD ROCm requires environmental override to prevent segfault
+sim = ""
 if "rocm" in torch.__version__:
     os.environ["HSA_OVERRIDE_GFX_VERSION"] = "10.3.0"
     sim = "(ROCm)"
