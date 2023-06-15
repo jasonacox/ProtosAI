@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $# -ne 1 ]]; then
+if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <dataset>"
   exit 1
 fi
@@ -16,6 +16,7 @@ time python3 train.py \
   --eval_iters=1 \
   --block_size=64 \
   --batch_size=8 \
-  --device=mps
+  --device=cpu \
+  $2 $3 $4 $5 $6
 
 echo "Done."
