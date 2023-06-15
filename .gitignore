@@ -7,3 +7,7 @@ val.bin
 .gitignore
 jason.txt
 input.txt
+input.nl-json
+ckpt.pt
+meta.pkl
+jasonacox.old
