@@ -34,6 +34,13 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 import tiktoken
+import argparse
+
+# settings
+usegpt2 = True # Uses GPT2 tokenization or char based
+loadmodel = False # Load existing model and loadmodel output
+ckpt_path = "bigram.pt"
+filename = "input.txt"
 
 # hyperparameters
 batch_size = 16 # how many independent sequences will we process in parallel?
@@ -42,21 +49,37 @@ max_iters = 50000
 eval_interval = 100
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-#device = 'mps' # use this for Apple Silicon 
+device = 'mps' if torch.backends.mps.is_available() else device
 eval_iters = 200
 n_embd = 64
 n_head = 4
 n_layer = 4
 dropout = 0.0
-# ------------
-usegpt2 = True # Uses GPT2 tokenization or char based
+torch_seed = 1337
 
-torch.manual_seed(1337)
+# header
+print("JasonGPT - Bigram LLM Test")
+print()
 
+# parse command line
+parser = argparse.ArgumentParser()
+parser.add_argument("-filename", default=filename, help="Name of the text file to import for training.")
+parser.add_argument("-loadmodel", default=loadmodel, action="store_true", help="Load existing model and generate response.")
+parser.add_argument("-max_iters", default=max_iters, type=int, help="Maximum iterations")
+args = parser.parse_args()
+loadmodel = args.loadmodel
+max_iters = args.max_iters
+filename = args.filename
+
+# set seed
+torch.manual_seed(torch_seed)
+
+# load training text
 # wget https://github.com/jasonacox/ProtosAI/files/11715163/jason.txt
-with open('input.txt', 'r', encoding='utf-8') as f:
+if not loadmodel:
+    print(f"Loading text file for model: {filename}")
+with open(filename, 'r', encoding='utf-8') as f:
     text = f.read()
-
 if usegpt2:
     # GPT-2 Encoding
     enc = tiktoken.get_encoding("gpt2")
@@ -235,22 +258,52 @@ print(sum(p.numel() for p in m.parameters())/1e6, 'M parameters')
 # create a PyTorch optimizer
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
-for iter in range(max_iters):
+if not loadmodel:
+    # Train
+    print("Training...")
+    for iter in range(max_iters):
 
-    # every once in a while evaluate the loss on train and val sets
-    if iter % eval_interval == 0 or iter == max_iters - 1:
-        losses = estimate_loss()
-        print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+        # every once in a while evaluate the loss on train and val sets
+        if iter % eval_interval == 0 or iter == max_iters - 1:
+            losses = estimate_loss()
+            print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
-    # sample a batch of data
-    xb, yb = get_batch('train')
+        # sample a batch of data
+        xb, yb = get_batch('train')
 
-    # evaluate the loss
-    logits, loss = model(xb, yb)
-    optimizer.zero_grad(set_to_none=True)
-    loss.backward()
-    optimizer.step()
+        # evaluate the loss
+        logits, loss = model(xb, yb)
+        optimizer.zero_grad(set_to_none=True)
+        loss.backward()
+        optimizer.step()
+
+    # sae model 
+    model_args = dict(n_layer=n_layer, n_head=n_head, n_embd=n_embd, block_size=block_size,
+                    bias=False, vocab_size=None, dropout=dropout) 
+    best_val_loss = losses['val']
+    checkpoint = {
+        'model': model.state_dict(),
+        'optimizer': optimizer.state_dict(),
+        'model_args': model_args,
+        'iter_num': iter,
+        'best_val_loss': best_val_loss,
+    }
+    print(f"saving checkpoint to {ckpt_path}")
+    torch.save(checkpoint, ckpt_path)
+
+if loadmodel:
+    # Load model
+    print(f"Loading existing model {ckpt_path}")
+    checkpoint = torch.load(ckpt_path, map_location=torch.device(device))
+    state_dict = checkpoint['model']
+    unwanted_prefix = '_orig_mod.'
+    for k,v in list(state_dict.items()):
+        if k.startswith(unwanted_prefix):
+            state_dict[k[len(unwanted_prefix):]] = state_dict.pop(k)
+    model.load_state_dict(state_dict)
+    model.eval()
 
 # generate from the model
+print("Generating output...")
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
 print(decode(m.generate(context, max_new_tokens=2000)[0].tolist()))
