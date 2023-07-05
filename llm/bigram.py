@@ -136,16 +136,20 @@ class Head(nn.Module):
         self.key = nn.Linear(n_embd, head_size, bias=False)
         self.query = nn.Linear(n_embd, head_size, bias=False)
         self.value = nn.Linear(n_embd, head_size, bias=False)
+        # register lower triangular matrix
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
 
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         B,T,C = x.shape
+        # keys, queries and values
         k = self.key(x)   # (B,T,C)
         q = self.query(x) # (B,T,C)
-        # compute attention scores ("affinities")
+        # compute attention scores ("affinities") and
+        # use "scaled attention" to control variants for softmax
         wei = q @ k.transpose(-2,-1) * C**-0.5 # (B, T, C) @ (B, C, T) -> (B, T, T)
+        # decoder block - focus attention so that nodes from the future do not talk to the past
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf')) # (B, T, T)
         wei = F.softmax(wei, dim=-1) # (B, T, T)
         wei = self.dropout(wei)
