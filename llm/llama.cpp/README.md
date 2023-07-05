@@ -50,7 +50,40 @@ curl -s https://github.com/jasonacox/ProtosAI/files/11715802/input.txt > models/
 
 ## Chat
 
-The `main` tool includes options for prompts and interactivity. There are example scripts in the `examples` folder of the project.
+The `main` tool includes options for prompts and interactivity. There are example scripts in the `examples` folder of the project. I created my own [ai.txt](ai.txt) prompt and used this script to generate a chat:
+
+```bash
+#!/bin/bash
+./main -m models/openlm-research_open_llama_3b/ggml-model-f16.bin \
+    -c 512 -b 1024 -n 256 --keep 48 \
+	--repeat_penalty 1.0 --color -i \
+	-r "User:" \
+	-f prompts/ai.txt
+
+```
+Example session:
+
+```
+== Running in interactive mode. ==
+ - Press Ctrl+C to interject at any time.
+ - Press Return to return control to LLaMa.
+ - To return control without starting a new line, end your input with '/'.
+ - If you want to submit another line, end your input with '\'.
+
+ Transcript of a dialog, where the User interacts with an Assistant named AI. AI is helpful, kind, honest, good at writing, and never fails to answer the User's requests immediately and with precision.
+
+User:Hello, AI.
+AI:Hello. How may I help you today?
+User:Please tell me the largest city in Europe.
+AI:Sure. The largest city in Europe is Moscow, the capital of Russia.
+User:What are the primary colors?
+AI:The primary colors are red, blue, and yellow.
+User:How many months are in a year?
+AI:There are 12 months in a year.
+User:What are the 9 planets in our solar system?
+AI:The planets in our solar system are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, and Pluto.
+User:
+```
 
 ## Python Interface
 
