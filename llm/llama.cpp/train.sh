@@ -9,6 +9,7 @@
         --model-out models/jason/jason.bin \
         --train-data models/jason/jason.txt \
         --ctx 32 --embd 256 --head 8 --layer 16 \
-        -t 4 -b 32 -n 1 --seed 42 --adam-iter 16 \
-        --use-flash --print-details-interval 0 --predict 64
+        -t 4 -b 32 --seed 42 --adam-iter 16 \
+        --use-flash --print-details-interval 0 --predict 64 \
+        -n 1 # adjust this for the number of iterations to run
 
