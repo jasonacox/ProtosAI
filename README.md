@@ -4,6 +4,8 @@ A Study in Artificial Intelligence
 
 This project consist of a collection of scripts that explore capabilities provided by neural networks pre-trained transformers. These scripts are based on the Hugging Face (https://huggingface.co/) models.  
 
+Google Colab Example: [ProtosAI.ipynb](https://colab.research.google.com/drive/1gAeHW5ViKXLWQbbm48FxKehbM0A0FI7M?usp=sharing)
+
 ## Setup
 
 Setup required for these scripts:
