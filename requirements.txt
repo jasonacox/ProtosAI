@@ -8,3 +8,4 @@ sentencepiece
 pyaudio
 image
 openai
+tiktoken
