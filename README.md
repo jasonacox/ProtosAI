@@ -64,8 +64,11 @@ Number of characters: 299
 The `transcribe.py` script takes an audio file (mp3 or wav file) and uses a speech model to produce a basic text transcription. A additional tool `record.py` will use your laptops microphone to record your dictation into `audio.wav` that can be used by `transcribe.py`.
 
 ```bash
-# Requirements
-brew install ffmpeg           
+# Requirements - MacOS
+brew install ffmpeg   
+
+# Requirements - Ubuntu Linux
+sudo apt install ffmpeg   
 ```
 
 ```text
@@ -82,8 +85,13 @@ HELLO THIS IS A TEST
 The `speech.py` script converts a text string into an audio file.  The script requires additional libraries:
 
 ```bash
-# Requirements
-brew install portaudio  # MacOS requires portaudio
+# Requirements MacOS
+brew install portaudio  
+
+# Requirements Ubuntu Linux
+sudo apt install portaudio19-dev
+sudo apt install python3-pyaudio
+
 pip install espnet torchaudio sentencepiece pyaudio
 ```
 
