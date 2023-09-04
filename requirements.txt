@@ -1,0 +1,10 @@
+#
+transformers
+datasets
+torch
+espnet 
+torchaudio 
+sentencepiece 
+pyaudio
+image
+openai

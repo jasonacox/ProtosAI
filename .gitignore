@@ -12,3 +12,4 @@ ckpt.pt
 meta.pkl
 jasonacox.old
 offload/
+llm/bigram.pt
