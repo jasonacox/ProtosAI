@@ -9,21 +9,60 @@ The [llama.cpp project's](https://github.com/ggerganov/llama.cpp) goal is to run
 https://github.com/ggerganov/llama.cpp.git
 cd llama.cpp
 
-# Build for local machine
+# Build for Nvidia GPU using CMake
+mkdir build
+cd build
+cmake ..
+cmake .. -DLLAMA_CUBLAS=ON
+cmake --build . --config Release
+
+# Alternatively build for CPU only
 make
 ```
 
 ## Use Pre-Trained Models
 
 ```bash
-# Download the Open LLaMA 3B, 7B, or 13B model from Hugging Face.
+# Download the LLaMA-2 7B GGUF model from Hugging Face.
 cd models
-git-lfs clone https://huggingface.co/openlm-research/open_llama_3b # or use 
+wget https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/resolve/main/llama-2-7b-chat.Q3_K_M.gguf
 cd ..
-python convert.py models/openlm-research/open_llama_3b
 
-# Test
-./main -m models/openlm-research/open_llama_3b
+# Run interactive chat.
+./build/bin/main -m models/llama-2-7b-chat.Q3_K_M.gguf \
+    -t 4 \
+    --color \
+    -c 4096 \
+    --temp 0.7 \
+    --gpu-layers 32 \
+    -n -1 \
+    -i -ins 
+
+Where:
+    -m models/llama-2-7b-chat.Q3_K_M.gguf   # The model
+    -t 4                                    # change to match number of CPU cores
+    -c 4096                                 # context length
+    --temp 0.7                              # randomness 
+    --gpu-layers 32                         # number of layers to offload to GPU - remove if cpu only
+    -n -1 --color                           # options 
+    -i -ins                                 # interactive mode and instruction
+```
+
+See https://github.com/ggerganov/llama.cpp/blob/master/examples/main/README.md for more details on inference parameters.
+
+Example chat:
+
+```
+> Pick a color
+Green
+
+> What is a llama?
+A llama is a large, domesticated mammal that is native to South America. It has long, shaggy fur and distinctive ears with a distinctive curled-over shape. Llamas are used for their wool and as pack animals in remote areas where cars cannot reach. They are also known for their calm and gentle nature.
+
+> Write a haiku
+Llama in the sun
+Gentle eyes, shaggy coat
+Soft as a cloud
 ```
 
 ## Train
