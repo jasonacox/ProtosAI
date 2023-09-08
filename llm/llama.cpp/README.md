@@ -6,14 +6,13 @@ The [llama.cpp project's](https://github.com/ggerganov/llama.cpp) goal is to run
 
 ```bash
 # Clone the project
-https://github.com/ggerganov/llama.cpp.git
+git clone https://github.com/ggerganov/llama.cpp.git
 cd llama.cpp
 
 # Build for Nvidia GPU using CMake
 mkdir build
 cd build
-cmake ..
-cmake .. -DLLAMA_CUBLAS=ON
+cmake .. -DLLAMA_CUBLAS=ON   # Omit -DLLAMA_CUBLAS=ON for CPU only
 cmake --build . --config Release
 
 # Alternatively build for CPU only
