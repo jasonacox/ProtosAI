@@ -9,14 +9,18 @@ The [llama.cpp project's](https://github.com/ggerganov/llama.cpp) goal is to run
 git clone https://github.com/ggerganov/llama.cpp.git
 cd llama.cpp
 
-# Build for Nvidia GPU using CMake
+# Linux - Build for Nvidia GPU using CMake
 mkdir build
 cd build
 cmake .. -DLLAMA_CUBLAS=ON   # Omit -DLLAMA_CUBLAS=ON for CPU only
 cmake --build . --config Release
 
-# Alternatively build for CPU only
-make
+# MacOS - Build using Metal
+# or Linux - CPU only
+make -j
+
+# MacOS - Build without Metal
+LLAMA_NO_METAL=1 make -j
 ```
 
 ## Use Pre-Trained Models
