@@ -79,14 +79,14 @@ Soft as a cloud
 The models built or downloaded here can be used by the [LLaMa-cpp-python](https://github.com/abetlen/llama-cpp-python) project.
 
 ```bash
-# MacOS - Install python module
+# MacOS - Build and Install python module
 pip install llama-cpp-python
 
-# Linux OS with Nvidia GPU support
+# Linux OS - Build and Install with Nvidia GPU support
 CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
 ```
 
-This will also build llama.cpp similar to what we did in in Setup above. Next, if you downloaded and converted the open_llama_3b model above, you can test it using this python script:
+This will also build llama.cpp but includes the python bindings. Next, if you downloaded and converted the Llama-2 LLM model above, you can test it using this python script:
 
 ```python
 from llama_cpp import Llama
