@@ -86,7 +86,7 @@ pip install llama-cpp-python
 CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
 ```
 
-This will also build llama.cpp but includes the python bindings. Next, if you downloaded and converted the Llama-2 LLM model above, you can test it using this python script:
+This will also build llama.cpp but includes the python bindings. Next, if you downloaded the Llama-2 LLM model above, you can test it using this python script:
 
 ```python
 from llama_cpp import Llama
