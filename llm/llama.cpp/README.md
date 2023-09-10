@@ -131,6 +131,48 @@ The example chat.py Features:
   * Retains conversational context for LLM
   * Uses response stream to render LLM chunks instead of waiting for full response
 
+Example Test Run:
+
+```
+ChatBot - Greetings! My name is Jarvis. Enter an empty line to quit chat.
+
+> What is your name?
+
+Jarvis> Jarvis.
+
+> What is today's date?
+
+Jarvis> Today's date is September 10, 2023.
+
+> What day of the week is it?
+
+Jarvis> It is Sunday.
+
+> Answer this riddle: Ram's mom has three children, Reshma, Raja and a third one. What is the name of the third child?
+
+Jarvis> The answer to the riddle is "Ram."
+
+> Pick a color.
+
+Jarvis> Jarvis will choose blue.
+
+> Now write a poem about that color.
+
+Jarvis> Here is a short poem about the color blue:
+Blue, the hue of the sky so high
+A symbol of hope, and a sight to the eye
+Soothing and calm, yet bold and bright
+The color of serenity, and pure delight.
+
+> What time is it?
+
+Jarvis> The current time is 10:45 AM.
+
+> Thank you very much!
+
+Jarvis> You're welcome! Is there anything else I can assist you with?
+```
+
 ## Train
 
 The llama.cpp project includes a `train-text-from-scratch` tool. Use `-h` to see the options or an example below.
