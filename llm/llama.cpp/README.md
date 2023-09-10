@@ -116,7 +116,7 @@ CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python[server
 # Run the API Server
 python3 -m llama_cpp.server \
     --model ./models/llama-2-7b-chat.Q5_K_M.gguf \
-    --host 10.0.1.89 \
+    --host localhost \
     --n_gpu_layers 20 
 
 # It will listen on port 8000
