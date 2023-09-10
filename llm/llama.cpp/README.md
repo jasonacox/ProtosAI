@@ -28,11 +28,12 @@ LLAMA_NO_METAL=1 make -j
 ```bash
 # Download the LLaMA-2 7B GGUF model from Hugging Face.
 cd models
-wget https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/resolve/main/llama-2-7b-chat.Q3_K_M.gguf
+# Also llama-2-7b-chat.Q3_K_M.gguf for small 3 bit version
+wget https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/resolve/main/llama-2-7b-chat.Q5_K_M.gguf
 cd ..
 
 # Run interactive chat.
-./build/bin/main -m models/llama-2-7b-chat.Q3_K_M.gguf \
+./build/bin/main -m models/llama-2-7b-chat.Q5_K_M.gguf \
     -t 4 \
     --color \
     -c 4096 \
@@ -42,7 +43,7 @@ cd ..
     -i -ins 
 
 Where:
-    -m models/llama-2-7b-chat.Q3_K_M.gguf   # The model
+    -m models/llama-2-7b-chat.Q5_K_M.gguf   # The model
     -t 4                                    # change to match number of CPU cores
     -c 4096                                 # context length
     --temp 0.7                              # randomness 
@@ -53,7 +54,12 @@ Where:
 
 See https://github.com/ggerganov/llama.cpp/blob/master/examples/main/README.md for more details on inference parameters.
 
-Example chat:
+Example chat using llama.cpp interactive mode:
+
+```bash
+./main -t 4 -m models/llama-2-7b-chat.Q5_K_M.gguf \
+    --color -c 4096 --temp 0.7 --gpu-layers 32 -n -1 -i -ins
+```
 
 ```
 > Pick a color
@@ -67,6 +73,63 @@ Llama in the sun
 Gentle eyes, shaggy coat
 Soft as a cloud
 ```
+
+## Python Interface
+
+The models built or downloaded here can be used by the [LLaMa-cpp-python](https://github.com/abetlen/llama-cpp-python) project.
+
+```bash
+# MacOS - Install python module
+pip install llama-cpp-python
+
+# Linux OS with Nvidia GPU support
+CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
+```
+
+This will also build llama.cpp similar to what we did in in Setup above. Next, if you downloaded and converted the open_llama_3b model above, you can test it using this python script:
+
+```python
+from llama_cpp import Llama
+
+# Load model
+llm = Llama(model_path="models/llama-2-7b-chat.Q5_K_M.gguf")
+
+# Ask a question
+question = "Name the planets in the solar system?"
+print(f"Asking: {question}...")
+output = llm(f"Q: {question} A: ", 
+    max_tokens=64, stop=["Q:", "\n"], echo=True)
+
+# Print answer
+print("\nResponse:")
+print(output['choices'][0]['text'])
+```
+
+## OpenAI API Compatible Server
+
+The llama-cpp-python library has a built in OpenAI API compatible server. This can be used to host your model locally and use OpenAI API tools against your self-hosted LLM.
+
+```bash
+# Install Server that uses OpenAI API
+CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python[server]
+
+# Run the API Server
+python3 -m llama_cpp.server \
+    --model ./models/llama-2-7b-chat.Q5_K_M.gguf \
+    --host 10.0.1.89 \
+    --n_gpu_layers 20 
+
+# It will listen on port 8000
+```
+
+See the example [chat.py](chat.py) CLI Chatbot script that connects to this server and hosts
+an interactive session with the LLM.
+
+The example chat.py Features:
+  * Use of OpenAI API (could be used to connect to the OpenAI service if you have a key)
+  * Works with local hosted OpenAI compatible llama-cpp-python[server]
+  * Retains conversational context for LLM
+  * Uses response stream to render LLM chunks instead of waiting for full response
 
 ## Train
 
@@ -125,72 +188,6 @@ AI:There are 12 months in a year.
 User:What are the 9 planets in our solar system?
 AI:The planets in our solar system are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, and Pluto.
 User:
-```
-
-## Python Interface
-
-The models built or downloaded here can be used by the [LLaMa-cpp-python](https://github.com/abetlen/llama-cpp-python) project.
-
-```bash
-# MacOS - Install python module
-pip install llama-cpp-python
-
-# Linux OS with Nvidia GPU support
-CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
-
-# Install Server
-CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python[server]
-```
-
-This will also build llama.cpp similar to what we did in in Setup above. Next, if you downloaded and converted the open_llama_3b model above, you can test it using this python script:
-
-```python
-from llama_cpp import Llama
-
-# Load model
-llm = Llama(model_path="models/openlm-research_open_llama_3b/ggml-model-f16.bin")
-
-# Ask a question
-question = "Name the planets in the solar system?"
-print(f"Asking: {question}...")
-output = llm(f"Q: {question} A: ", 
-    max_tokens=64, stop=["Q:", "\n"], echo=True)
-
-# Print answer
-print("\nResponse:")
-print(output['choices'][0]['text'])
-```
-
-Example Run
-
-```bash
-llama.cpp: loading model from models/openlm-research_open_llama_3b/ggml-model-f16.bin
-llama_model_load_internal: format     = ggjt v1 (pre #1405)
-llama_model_load_internal: n_vocab    = 32000
-llama_model_load_internal: n_ctx      = 512
-llama_model_load_internal: n_embd     = 3200
-llama_model_load_internal: n_mult     = 240
-llama_model_load_internal: n_head     = 32
-llama_model_load_internal: n_layer    = 26
-llama_model_load_internal: n_rot      = 100
-llama_model_load_internal: ftype      = 1 (mostly F16)
-llama_model_load_internal: n_ff       = 8640
-llama_model_load_internal: n_parts    = 1
-llama_model_load_internal: model size = 3B
-llama_model_load_internal: ggml ctx size =    0.06 MB
-llama_model_load_internal: mem required  = 7559.86 MB (+  682.00 MB per state)
-llama_new_context_with_model: kv self size  =  162.50 MB
-AVX = 1 | AVX2 = 1 | AVX512 = 0 | AVX512_VBMI = 0 | AVX512_VNNI = 0 | FMA = 1 | NEON = 0 | ARM_FMA = 0 | F16C = 1 | FP16_VA = 0 | WASM_SIMD = 0 | BLAS = 1 | SSE3 = 1 | VSX = 0 | 
-Asking: Name the planets in the solar system?...
-
-llama_print_timings:        load time =  6330.48 ms
-llama_print_timings:      sample time =    54.73 ms /    36 runs   (    1.52 ms per token,   657.77 tokens per second)
-llama_print_timings: prompt eval time =  6330.38 ms /    14 tokens (  452.17 ms per token,     2.21 tokens per second)
-llama_print_timings:        eval time = 14147.08 ms /    35 runs   (  404.20 ms per token,     2.47 tokens per second)
-llama_print_timings:       total time = 20687.86 ms
-
-Response:
-Q: Name the planets in the solar system? A: 1. Mercury 2. Venus 3. Earth 4. Mars 5. Jupiter 6. Saturn 7. Uranus 8. Neptune
 ```
 
 ## References
