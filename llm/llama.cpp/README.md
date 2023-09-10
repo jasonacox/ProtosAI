@@ -132,8 +132,14 @@ User:
 The models built or downloaded here can be used by the [LLaMa-cpp-python](https://github.com/abetlen/llama-cpp-python) project.
 
 ```bash
-# Install python module
+# MacOS - Install python module
 pip install llama-cpp-python
+
+# Linux OS with Nvidia GPU support
+CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
+
+# Install Server
+CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python[server]
 ```
 
 This will also build llama.cpp similar to what we did in in Setup above. Next, if you downloaded and converted the open_llama_3b model above, you can test it using this python script:
