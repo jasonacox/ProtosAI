@@ -23,7 +23,7 @@ make -j
 LLAMA_NO_METAL=1 make -j
 ```
 
-## Use Pre-Trained Models
+## Using LLaMA-2 7B Model
 
 ```bash
 # Download the LLaMA-2 7B GGUF model from Hugging Face.
@@ -73,6 +73,10 @@ Llama in the sun
 Gentle eyes, shaggy coat
 Soft as a cloud
 ```
+
+This example model was run on a Ubuntu Linux host with an Intel i5-6500 CPU @ 3.20GHz, 8GB RAM and an Nvidia GTX 1060 GPU with 6GB VRAM.
+
+https://github.com/jasonacox/ProtosAI/assets/836718/285101a0-1045-441d-9960-26d6c251db11
 
 ## Python Interface
 
