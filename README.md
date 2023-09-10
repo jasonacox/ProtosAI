@@ -109,6 +109,10 @@ Speaking: Perfection is achieved, not when there is nothing more to add, but whe
 
 https://github.com/jasonacox/ProtosAI/assets/836718/56759007-90b6-4d94-83f2-3cc3cb78ccbe
 
+Additionally, the advanced [OpenAI Whisper](https://github.com/openai/whisper) model can be used to do transcription. Sample scripts are located in the [whisper folder](https://github.com/jasonacox/ProtosAI/tree/master/whisper). 
+
+* Convert MP3 audio files to Text - [transcribe-mp3.py](https://github.com/jasonacox/ProtosAI/tree/master/whisper/transcribe-mp3.py)
+* Convert YouTube videos to Text - [transcribe-youtube.py](https://github.com/jasonacox/ProtosAI/tree/master/whisper/transcribe-youtube.py)
 
 ## Handwriting to Text
 
@@ -133,6 +137,14 @@ Analyzing handwriting from test.png...
 Resulting text:
 This is a test-Can you read this?
 ```
+
+## Large Language Models (LLM)
+
+The exploration of different LLMs is located in the [llm](https://github.com/jasonacox/ProtosAI/tree/master/llm) folder. The goal of this section is to explore the different LLM models, specifically related to building, training, tuning and using these models.
+
+* [BiGram](https://github.com/jasonacox/ProtosAI/tree/master/llm#bigram-model) - This experiment uses an introductory training model based on the "Let's build a GPT from scratch" [video](https://youtu.be/kCc8FmEb1nY?si=DHoNb1wd4nnqV5Nf) by Andrej Karpathy.
+* [nanoGPT](https://github.com/jasonacox/ProtosAI/tree/master/llm#nanogpt-model) - Similar to above but using the tiny GPT, Andrej Karpathy's [nanoGPT](https://github.com/karpathy/nanoGPT)
+* [LLaMA](https://github.com/jasonacox/ProtosAI/tree/master/llm/llama.cpp) - The [llama.cpp project's](https://github.com/ggerganov/llama.cpp) goal is to run LLaMA models using integer quantization to allow the use of these LLMs on local small scale computers like a MacBook.
 
 ## OpenAI Test
 

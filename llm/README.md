@@ -1,5 +1,18 @@
 # LLM Examples
 
+The goal of this section is to explore the different LLM models, specifically related to building, training, tuning and using these models.
+
+## LLaMA Models
+
+The [llama.cpp project's](https://github.com/ggerganov/llama.cpp) goal is to run LLaMA models using integer quantization to allow the use of these LLMs on small scale computers like a MacBook.
+
+In the folder [llama.cpp](https://github.com/jasonacox/ProtosAI/tree/master/llm/llama.cpp) we explore the use of the 7B Llama-2 model using llama.cpp (C/C++) and llama-cpp-python (python) projects.
+
+* Building an locally hosted LLM OpenAI API compatible server
+* Building a python based CLI chatbot that keeps conversational context
+* Build for MacOS (with or without Metal acceleration) and Linux with a Nvidia GPU (CUDA)
+* Train the model on user supplied documents
+
 ## Bigram Model
 
 This experiment uses the introductory training model based on the lecture and work by Andrej Karpathy and his nanoGPT project (https://github.com/karpathy/nanoGPT). I adjusted the training model to use the GPT tokenization method (tiktoken) for word embedding. It uses a Bigram Language model which simply looks at previous word to determine the next.
@@ -47,9 +60,9 @@ The raw input was small (468K) and a bit messy.  It had some random code and mak
 
 ## nanoGPT Model
 
-I have included a fork of Andrej Karpathy's nanoGPT here to help with the next example. In this example, similar to the Bigram test above, I will use the [raw text](https://github.com/jasonacox/ProtosAI/files/11715802/input.txt) (468K) from my blog (jasonacox.com) and used that as the training set.
+I have included a fork of Andrej Karpathy's [nanoGPT](https://github.com/karpathy/nanoGPT) here to help with the next example. In this example, similar to the Bigram test above, I will use the [raw text](https://github.com/jasonacox/ProtosAI/files/11715802/input.txt) (468K) from my blog (jasonacox.com) and used that as the training set.
 
-The first step was to prepare the input. 
+The first step was to prepare the input.
 
 ```bash
 # tokenize the raw text for the model
@@ -70,14 +83,6 @@ time python3 train.py \
     --batch_size=8 \
     --device=mps # for Apple Silicon or change to cpu or cuda
 ```
-
-### Example Output
-
-...
-
-### Summary
-
-...
 
 ## References
 

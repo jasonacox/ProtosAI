@@ -1,4 +1,4 @@
-# Using LLaMA Models
+# Using LLaMA LLM Models
 
 The [llama.cpp project's](https://github.com/ggerganov/llama.cpp) goal is to run LLaMA models using 4-bit integer quantization on small scale computers like a MacBook.
 
