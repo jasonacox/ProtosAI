@@ -23,7 +23,7 @@ import datetime
 openai.api_key = "OPENAI_API_KEY"                # Required, use bogus string for Llama.cpp
 openai.api_base = "http://localhost:8000/v1"     # Use API endpoint or comment out for OpenAI
 agentname = "Jarvis"                             # Set the name of your bot
-mymodel  ="./models/llama-2-7b-chat.Q5_K_M.gguf" # Pick model to use e.g. gpt-3.5-turbo for OpenAI
+mymodel  ="models/7B/gguf-model.bin"             # Pick model to use e.g. gpt-3.5-turbo for OpenAI
 TESTMODE = False                                 # Uses test prompts
 
 # Set base prompt and initialize the context array for conversation dialogue
@@ -35,8 +35,8 @@ context = [{"role": "system", "content": baseprompt}]
 # Function - Send prompt to LLM for response
 def ask(prompt):
     global context
+    # remember context
     context.append({"role": "user", "content": prompt})
-    #print(context)
     response = openai.ChatCompletion.create(
         model=mymodel,
         max_tokens=1024,
@@ -57,6 +57,8 @@ def printresponse(response):
             completion_text += chunk
             print(f"{chunk}",end="",flush=True) 
     print("",flush=True)
+    # remember context
+    context.append({"role": "assistant", "content" : completion_text})
     return completion_text
 
 # Chatbot Header
@@ -72,8 +74,7 @@ if TESTMODE:
     prompts.append("Answer this riddle: Ram's mom has three children, Reshma, Raja and a third one. What is the name of the third child?")
     prompts.append("Pick a color.")
     prompts.append("Now write a poem about that color.")
-    prompts.append("What time is it?")
-    prompts.append("Thank you very much!")
+    prompts.append("Thank you very much! Goodbye!")
 
 # Loop to prompt user for input
 while True:
@@ -88,7 +89,6 @@ while True:
     response=ask(p)
     print(f"{agentname}> ",end="", flush=True)
     ans = printresponse(response)
-    context.append({"role": "assistant", "content" : ans})
     print()
 
 print("Done")
