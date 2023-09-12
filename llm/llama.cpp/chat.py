@@ -5,11 +5,18 @@ Llama_cpp CLI ChatBot Example
 Python script that uses the OpenAI API to provide
 a command line interface (CLI) chat session with the LLM.
 
+Python chat client for OpenAI and the llama-cpp-python[server] OpenAI API Compatible 
+Web Server. Provides a simple command line interface (CLI) chat session.
+
 Features:
   * Uses OpenAI API
   * Works with local hosted OpenAI compatible llama-cpp-python[server]
   * Retains conversational context for LLM
   * Uses response stream to render LLM chunks instead of waiting for full response
+
+Requirements:
+  * pip install llama-cpp-python[server]
+  * python3 -m llama_cpp.server --model models/7B/ggml-model.bin
 
 Author: Jason A. Cox
 10 Sept 2023
