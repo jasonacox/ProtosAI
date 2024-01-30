@@ -109,10 +109,34 @@ Speaking: Perfection is achieved, not when there is nothing more to add, but whe
 
 https://github.com/jasonacox/ProtosAI/assets/836718/56759007-90b6-4d94-83f2-3cc3cb78ccbe
 
-Additionally, the advanced [OpenAI Whisper](https://github.com/openai/whisper) model can be used to do transcription. Sample scripts are located in the [whisper folder](https://github.com/jasonacox/ProtosAI/tree/master/whisper). 
+## Speech to Text
+
+The advanced [OpenAI Whisper](https://github.com/openai/whisper) model can be used to do transcription. Sample scripts are located in the [whisper folder](https://github.com/jasonacox/ProtosAI/tree/master/whisper). 
 
 * Convert MP3 audio files to Text - [transcribe-mp3.py](https://github.com/jasonacox/ProtosAI/tree/master/whisper/transcribe-mp3.py)
 * Convert YouTube videos to Text - [transcribe-youtube.py](https://github.com/jasonacox/ProtosAI/tree/master/whisper/transcribe-youtube.py)
+
+## Voice Cloning
+
+There are several models and kits emerging that allow you to build your own speech model based on sample speech. The TTS python package is one, by coqui-ai https://github.com/coqui-ai/TTS
+
+```bash
+# Install TTS
+pip install TTS
+```
+
+Example (TBD)
+
+```python
+from TTS.api import TTS
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
+
+# generate speech by cloning a voice using default settings
+tts.tts_to_file(text="It took me quite a long time to develop a voice, and now that I have it I'm not going to be silent.",
+                file_path="output.wav",
+                speaker_wav="/path/to/target/speaker.wav",
+                language="en")
+```
 
 ## Handwriting to Text
 
