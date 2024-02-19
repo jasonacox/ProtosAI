@@ -1,14 +1,30 @@
-#!/usr/bin/python3
-"""
-GPU Information for PyTorch
+# Jupyter Lab
 
-Author: Jason A. Cox
-4 June 2023
-https://github.com/jasonacox/ProtosAI/
+The following docker run witll set up a Jupyter Lab notebook server on your own local GPU server:
 
-This is a simple GPU test for PyTorch workloads.
+```bash
+docker run -d  \
+        --shm-size=10.24gb \
+        --gpus all \
+        -p 8888:8888 \
+        -e JUPYTER_ENABLE_LAB=yes \
+        -v "${PWD}":/home/jovyan/work \
+        --name jupyter \
+        quay.io/jupyter/datascience-notebook:2024-01-15 start-notebook.sh --NotebookApp.token='' --notebook-dir=/home/jovyan/work
+```
 
-"""
+This will:
+* Use all GPUs available in the Nvidia container.
+* Listen on http://localhost:8888/lab
+* Store and persist all notebooks in the local directory.
+
+Example notebook run:
+
+```ipynb
+!pip install torch
+```
+
+```python
 # import
 print("GPU Information for PyTorch")
 print("   Version of torch: ",end="")
@@ -69,3 +85,27 @@ print()
 print(f"PyTorch Test with {torch_device} - Random 4x4 Array\n")
 random_array = torch.randint(low=0, high=10000, size=(4, 4), device=torch_device)
 print(random_array)
+```
+
+```ipynb
+GPU Information for PyTorch
+   Version of torch:  2.2.0+cu121
+
+GPU Details
+   Device #0: NVIDIA GeForce RTX 3090
+   Type: cuda 
+   GPUs: 1
+
+Memory
+   GPU Total Memory: 23.69110107421875 GB
+   GPU Free Memory: 1.71685791015625 GB (7%)
+   Allocated: 0.0 GB
+   Cached:    0.0 GB
+
+PyTorch Test with cuda - Random 4x4 Array
+
+tensor([[5820, 7863, 2464, 2813],
+        [4027, 1586, 5967, 2303],
+        [2072, 5165, 3202, 7322],
+        [6688, 7199, 1020, 5595]], device='cuda:0')
+```
