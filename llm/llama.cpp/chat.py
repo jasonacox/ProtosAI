@@ -12,6 +12,10 @@ Features:
   * Uses response stream to render LLM chunks instead of waiting for full response
 
 Requirements:
+  * pip install openai
+
+Running a llama-cpp-python server:
+  * CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
   * pip install llama-cpp-python[server]
   * python3 -m llama_cpp.server --model models/7B/ggml-model.bin
 
@@ -24,24 +28,29 @@ import openai
 import datetime
 
 # Configuration Settings - Showing local LLM
-openai.api_key = "OPENAI_API_KEY"                # Required, use bogus string for Llama.cpp
-openai.api_base = "http://localhost:8000/v1"     # Use API endpoint or comment out for OpenAI
+api_key = "OPENAI_API_KEY"                       # Required, use bogus string for Llama.cpp
+api_base = "http://localhost:8000/v1"            # Use API endpoint or comment out for OpenAI
 agentname = "Jarvis"                             # Set the name of your bot
-mymodel  ="models/7B/gguf-model.bin"             # Pick model to use e.g. gpt-3.5-turbo for OpenAI
+mymodel  ="tinyllm"                              # Pick model to use e.g. gpt-3.5-turbo for OpenAI
 TESTMODE = False                                 # Uses test prompts
+USE_SYSTEM = False                               # Use system prompt for first message
 
 # Set base prompt and initialize the context array for conversation dialogue
 current_date = datetime.datetime.now()
 formatted_date = current_date.strftime("%m/%d/%Y")
 baseprompt = "You are %s, a highly intelligent assistant. Keep your answers brief and accurate. Current date is %s." % (agentname, formatted_date)
-context = [{"role": "system", "content": baseprompt}]
+if USE_SYSTEM:
+    context = [{"role": "system", "content": baseprompt}] 
+else:
+    context = [{"role": "user", "content": baseprompt}, {"role": "assistant", "content": "Okay, let's get started."}] 
 
 # Function - Send prompt to LLM for response
 def ask(prompt):
     global context
     # remember context
     context.append({"role": "user", "content": prompt})
-    response = openai.ChatCompletion.create(
+    llm = openai.OpenAI(api_key=api_key, base_url=api_base)
+    response = llm.chat.completions.create(
         model=mymodel,
         max_tokens=1024,
         stream=True, # Send response chunks as LLM computes next tokens
@@ -55,9 +64,9 @@ def printresponse(response):
     completion_text = ''
     # iterate through the stream of events and print it
     for event in response:
-        event_text = event['choices'][0]['delta']
-        if 'content' in event_text:
-            chunk = event_text.content
+        event_text = event.choices[0].delta.content
+        if event_text:
+            chunk = event_text
             completion_text += chunk
             print(f"{chunk}",end="",flush=True) 
     print("",flush=True)
