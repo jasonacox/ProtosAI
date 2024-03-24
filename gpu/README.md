@@ -1,6 +1,6 @@
 # GPU support for PyTorch
 
-Setting up GPU support for AI workloads can be non-trivial. If you happen to have an Nvidia GPU, chances are you have GPU support already installed via CUDA. If you have an AMD GPU, you are going to need to do some gymanastic to get to work. 
+Setting up GPU support for AI workloads can be non-trivial. If you happen to have an Nvidia GPU, chances are you have GPU support already installed via CUDA. If you have an AMD GPU, you are going to need to do some gymnastics to get it to work. 
 
 I'm going to log some of my adventure here. Hopefully this is helpful for anyone else going on this journey.
 
@@ -27,6 +27,7 @@ See the PyTorch friendly setup matrix here: https://pytorch.org/get-started/loca
 * Nvidia GPUs use the CUDA (Compute Unified Device Architecture) library
 * AMD GPUs use the ROCm (Radeon Open Compute) library
 * Apple Silicon M1/M2 GPUs use the Metal framework and PyTorch uses Apple’s Metal Performance Shaders (MPS) as a backend
+* The Torch library is **big**, make sure you have plenty of space on your filesystem.
 
 ### Nvidia - CUDA
 
