@@ -28,6 +28,27 @@ See the PyTorch friendly setup matrix here: https://pytorch.org/get-started/loca
 * AMD GPUs use the ROCm (Radeon Open Compute) library
 * Apple Silicon M1/M2 GPUs use the Metal framework and PyTorch uses Apple’s Metal Performance Shaders (MPS) as a backend
 
+### Nvidia - CUDA
+
+To install support for CUDA, follow these steps:
+
+1. Use the Nvidia download tool to get the right setup for your GPU: https://developer.nvidia.com/cuda-downloads
+2. Reboot
+3. The post-installation steps are important, specifically setting up `PATH`: https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions
+4. Test
+
+```bash
+# Ensure you have these working
+nvidia-smi
+nvcc -V
+
+# Install python libraries 
+pip install torch torchvision torchaudio
+
+# Test
+python3 gpu.py
+```
+
 ### AMD - ROCm
 
 If you have an AMD GPU, you will need to install and configure PyTorch to use the ROCm API for these AMD GPUs.
