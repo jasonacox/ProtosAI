@@ -63,9 +63,7 @@ if __name__ == '__main__':
     transcript_file = audio_file + ".txt"
     with open(transcript_file, 'w') as f:
         for s in data['segments']:
-            start = s['start']
-            start = f"{int(start//3600)}:{(int(start%3600)//60):02d}:{int(start%60):02d}"
+            start = f"{int(s['start']//3600)}:{(int(s['start']%3600)//60):02d}:{int(s['start']%60):02d}"
             end = f"{int(s['end']//3600)}:{(int(s['end']%3600)//60):02d}:{int(s['end']%60):02d}"
             f.write(f"{start} - {end}: {s['text']}\n")
     print(f" - Transcript with timestamps saved to {transcript_file}")
-
