@@ -21,16 +21,38 @@ import os
 import json
 import whisper
 
-MODEL = 'large'
+MODEL = 'small'
 
 if __name__ == '__main__':
     # Header
-    print("transcribe.py - Transcribe audio files with timestamps")
+    print(f"{whisper.__name__.capitalize()} v{whisper.__version__} ({sys.argv[0]})",
+          "- Transcribe audio to text with timestamps")
     print()
     if len(sys.argv) < 2:
-        # Usage
-        print("Usage: python3 transcribe.py audio.mp3")
+        # Print usage and exit
+        print(f"Usage: {sys.argv[0]} [audio_file] [model]")
+        print()
+        print("Arguments:")
+        print("  audio_file: Path to the audio file to transcribe (wav, mp3, etc)")
+        print(f"  model:      Whisper model to use (default: {MODEL})")
+        models = whisper.available_models()
+        line = "              Models: "
+        for m in models:
+            if len(line + m) > 80:
+                print(line)
+                line = " " * 22
+            line += m + ", "
+        print(line[:-2])
+        print()
+        print("Outputs:\n",
+              "  [audio_file].raw:  Raw transcription text\n",
+              "  [audio_file].json: JSON formatted transcription\n",
+              "  [audio_file].txt:  Transcript with timestamps\n")
         sys.exit(1)
+
+    if len(sys.argv) > 2:
+        MODEL = sys.argv[2]
+
     audio_file = sys.argv[1]
     if not os.path.exists(audio_file):
         print(f"Error: File not found: {audio_file}")

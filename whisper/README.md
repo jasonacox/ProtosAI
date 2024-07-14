@@ -26,13 +26,13 @@ To transcribe an audio.mp3 file, you would do the following:
 python3 transcribe.py audio.mp3
 ```
 
-This creates three file: JSON and RAW file with timestamps and a plain text only TXT file. You can also use the whisper library directly.
+This creates three file: JSON and RAW file with timestamps and a plain text only TXT file. You can also use the whisper library directly. You can pick different model sizes (see [list here](https://github.com/openai/whisper/?tab=readme-ov-file#available-models-and-languages))
 
 ```python
 import whisper
 
-# Load the whisper weights
-model = whisper.load_model('large')
+# Load the whisper weights - Options: tiny, base, small, medium and large
+model = whisper.load_model('small')
 
 # Transcribe with Timestamps
 output = model.transcribe('audio.mp3', erbose=True, word_timestamps=True)
