@@ -1,6 +1,6 @@
 # Whisper
 
-OpenAI Whisper is a speech-to-text model that uses machine learning to transcribe audio into text. It's trained on a large amount of English audio and text, as well as supervised data from the web, making it robust and able to generalize to a variety of languages and tasks. Whisper can also translate speech to English. 
+OpenAI Whisper is a speech-to-text model that uses machine learning to transcribe audio into text. It's trained on a large amount of English audio and text, as well as supervised data from the web, making it robust and able to generalize to a variety of languages and tasks.
 
 ## Setup
 
