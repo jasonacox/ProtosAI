@@ -1,38 +1,48 @@
 #!/usr/bin/python3
 """
-Tokenize all content from inputfile
+Tokenize all content from TinyStories
 
 Author: Jason A. Cox
-14 June 2023
+25 July 2024
 https://github.com/jasonacox/ProtosAI/
 
-Credit: Simon Willison
-    * Modified code from https://til.simonwillison.net/llms/training-nanogpt-on-my-blog  
 """
 import os
-import json
 import tiktoken
 import numpy as np
 import random
+import requests
 
-# input file
-input_file_path = os.path.join(os.path.dirname(__file__), 'input.nl-json')
+# Grab TinyStories text file from Hugging Face
+if not os.path.exists(os.path.join(os.path.dirname(__file__), 'tinystories.txt')):
+    print("Downloading TinyStories from Hugging Face...")
+    url = "https://huggingface.co/datasets/roneneldan/TinyStories/resolve/main/TinyStories-valid.txt"
+    response = requests.get(url)
+    input_file_path = os.path.join(os.path.dirname(__file__), 'tinystories.txt')
+    with open(input_file_path, 'w', encoding='utf-8') as f:
+        f.write(response.text)
+    print("Done. TinyStories.txt written to disk.")
+else:
+    input_file_path = os.path.join(os.path.dirname(__file__), 'tinystories.txt')
 
-# array of blog posts
+# read stories into entries array
 entries = []
-
-# read posts, one per line
 print(f"Reading blog posts from {input_file_path}...")
 n = 1
+story = ""
 with open(input_file_path, 'r', encoding='utf-8') as f:
     for line in f:
-        if line.strip():
-            entries.append(json.loads(line))
-        print(f"Post {n}\r",end="")
+        if "<|endoftext|>" in line:
+            # print(f"Story {n}: {story}\n")
+            entries.append(story)
+            story = ""
+        else:
+            story += line
+        print(f"Story {n}\r",end="")
         n = n + 1
 
 # shuffle entries
-print("\nShuffle posts...")
+print("\nShuffle stories...")
 random.shuffle(entries)
 
 # create training set and validation set
@@ -47,14 +57,12 @@ enc = tiktoken.get_encoding("gpt2")
 # loop through entries, tonize, add EOS token
 print("Tokenizing training set...")
 train_ids = []
-for entry in train_entries:
-    content = f"{entry[0]}\nby Jason A. Cox\n\n{entry[1]}"
+for content in train_entries:
     train_ids += enc.encode_ordinary(content)
     train_ids.append(enc.eot_token)
 print("Tokenizing validation set...")
 val_ids = []
-for entry in val_entries:
-    content = f"{entry[0]}\nby Jason A. Cox\n\n{entry[1]}"
+for content in val_entries:
     val_ids += enc.encode_ordinary(content)
     val_ids.append(enc.eot_token)
 

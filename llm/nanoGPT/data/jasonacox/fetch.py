@@ -32,6 +32,9 @@ translation_table = str.maketrans("…’‘‛“”«»„", ".'''\"\"\"\"\"")
 print(f"Pulling blog content from {url}...")
 data = httpx.get(url).json()
 n = 1
+output = {
+    "content": []
+}
 
 # parse and output content into lines for prepare.py
 for item in data["items"]:
@@ -40,6 +43,7 @@ for item in data["items"]:
     body = unescape(body)
     body = body.translate(translation_table)
     body = ''.join(char for char in body if char in string.printable)
+    output["content"].append([title, body])
     fp.write(json.dumps([title, body]) + "\n")
     print(f"{n} : " + json.dumps([title, body]) + "\n")
     n = n + 1
@@ -47,3 +51,7 @@ for item in data["items"]:
 # done
 fp.close()
 print(f"\nDone. Output written to {outputfile}")
+
+# write output to a file
+with open(outputfile, 'w') as f:
+    json.dump(output, f)
