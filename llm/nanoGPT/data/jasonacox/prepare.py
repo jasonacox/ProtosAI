@@ -10,26 +10,44 @@ Credit: Simon Willison
     * Modified code from https://til.simonwillison.net/llms/training-nanogpt-on-my-blog  
 """
 import os
-import json
+import re
+import string
+from html import unescape
+import random
 import tiktoken
 import numpy as np
-import random
-
-# input file
-input_file_path = os.path.join(os.path.dirname(__file__), 'input.nl-json')
+import httpx
 
 # array of blog posts
 entries = []
 
-# read posts, one per line
-print(f"Reading blog posts from {input_file_path}...")
+# regex to remove html tags
+tag_re = re.compile('<.*?>')
+
+# blog address - rss feed in json format
+URL = "https://www.jasonacox.com/wordpress/feed/json"
+
+# convert non-standard punctuation into clean ASCII
+translation_table = str.maketrans("…’‘‛“”«»„", ".'''\"\"\"\"\"")
+
+# pull blog content
+print(f"Pulling blog content from {URL}...")
+data = httpx.get(URL).json()
+print("Loaded", len(data["items"]), "items...")
 n = 1
-with open(input_file_path, 'r', encoding='utf-8') as f:
-    for line in f:
-        if line.strip():
-            entries.append(json.loads(line))
-        print(f"Post {n}\r",end="")
-        n = n + 1
+for item in data["items"]:
+    title = item["title"]
+    body = tag_re.sub('', item["content_html"])
+    body = unescape(body)
+    body = body.translate(translation_table)
+    body = ''.join(char for char in body if char in string.printable)
+    entry = [title, body]
+    entries.append(entry)
+    print(f"{n} : {title}")
+    n = n + 1
+
+print()
+print("Processed", len(entries), "entries")
 
 # shuffle entries
 print("\nShuffle posts...")
