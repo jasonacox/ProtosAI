@@ -12,20 +12,34 @@ from model import GPTConfig, GPT
 print("nanoGPT Chat Client")
 print("-------------------")
 
-# -----------------------------------------------------------------------------
-init_from = 'resume' # either 'resume' (from an out_dir) or a gpt2 variant (e.g. 'gpt2-xl')
-out_dir = 'out' # ignored if init_from is not 'resume'
-start = "\n" # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
-num_samples = 1 # number of samples to draw
-max_new_tokens = 500 # number of tokens generated in each sample
-temperature = 1.0 # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
-top_k = 200 # retain only the top_k most likely tokens, clamp others to have 0 probability
+# configuration settings and hyperparameters
+# --------------------------------------------------------------------------------------------------------
+init_from = 'resume'    # either 'resume' (from an out_dir) or a gpt2 variant (e.g. 'gpt2-xl')
+out_dir = 'out'         # ignored if init_from is not 'resume'
+start = "\n"            # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
+num_samples = 1         # number of samples to draw
+max_new_tokens = 500    # number of tokens generated in each sample
+temperature = 1.0       # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
+top_k = 200             # retain only the top_k most likely tokens, clamp others to have 0 probability
 seed = 1337
-device = 'cuda' # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1', etc.
-dtype = 'bfloat16' # 'float32' or 'bfloat16' or 'float16'
-compile = False # use PyTorch 2.0 to compile the model to be faster
+device = 'auto'         # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1', etc.
+dtype = 'bfloat16'      # 'float32' or 'bfloat16' or 'float16'
+compile = False         # use PyTorch 2.0 to compile the model to be faster
+streaming = True        # if True, generate one token at a time, if False, generate all tokens at once
+# --------------------------------------------------------------------------------------------------------
+
 exec(open('configurator.py').read()) # overrides from command line or config file
-# -----------------------------------------------------------------------------
+
+# attempt to auto-detect the device
+if not device or device == 'auto':
+    if torch.cuda.is_available():
+        device = 'cuda'
+    elif torch.backends.mps.is_available():
+        device = 'mps'
+        compile = False # MPS does not support JIT compilation
+    else:
+        device = 'cpu'
+print(f"using device: {device}")
 
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
@@ -39,7 +53,7 @@ ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=
 if init_from == 'resume':
     # init from a model saved in a specific directory
     ckpt_path = os.path.join(out_dir, 'ckpt.pt')
-    checkpoint = torch.load(ckpt_path, map_location=device)
+    checkpoint = torch.load(ckpt_path, map_location=device, weights_only=True)
     gptconf = GPTConfig(**checkpoint['model_args'])
     model = GPT(gptconf)
     state_dict = checkpoint['model']
@@ -81,23 +95,36 @@ else:
 print("Enter your prompt (or 'exit' to quit)\n")
 
 while True:
-    start = input("> ")
-    if start.lower() == 'exit':
+    prompt = input("> ")
+    if prompt.lower() == 'exit':
         break
-    if start == "":
-        start = "\n"
+    if prompt == "":
+        prompt = "\n"
 
     # encode the beginning of the prompt
-    if start.startswith('FILE:'):
-        with open(start[5:], 'r', encoding='utf-8') as f:
-            start = f.read()
-    start_ids = encode(start)
-    x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
+    if prompt.startswith('FILE:'):
+        with open(prompt[5:], 'r', encoding='utf-8') as f:
+            prompt = f.read()
+    start_ids = encode(prompt)
+
+    #input_tensor = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
+    input_tensor = torch.tensor(start_ids, dtype=torch.long, device=device).unsqueeze(0)
 
     # run generation
     with torch.no_grad():
         with ctx:
-            for k in range(num_samples):
-                y = model.generate(x, max_new_tokens, temperature=temperature, top_k=top_k)
-                print(decode(y[0].tolist()))
-                print("")
+            for _ in range(num_samples):
+                if not streaming:
+                    y = model.generate(input_tensor, max_new_tokens, temperature=temperature, top_k=top_k)
+                    print(decode(y[0].tolist()))
+                    continue
+                else:
+                    # streaming generation - one token at a time
+                    for _ in range(max_new_tokens):
+                        output = model.generate(input_tensor, max_new_tokens=1, temperature=temperature, top_k=top_k)
+                        next_token = output[:, -1:]  # Select the last token, maintaining the batch dimension
+                        # Append the new token to the input tensor
+                        input_tensor = torch.cat([input_tensor, next_token], dim=-1)
+                        decoded_word = decode(next_token[0].tolist())
+                        print(decoded_word, end='', flush=True)
+                    print()  # Newline after the generation
