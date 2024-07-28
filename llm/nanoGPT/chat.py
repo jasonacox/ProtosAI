@@ -14,9 +14,9 @@ print("-------------------")
 
 # configuration settings and hyperparameters
 # --------------------------------------------------------------------------------------------------------
-init_from = 'resume'    # either 'resume' (from an out_dir) or a gpt2 variant (e.g. 'gpt2-xl')
-out_dir = 'out'         # ignored if init_from is not 'resume'
-start = "\n"            # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
+init_from = 'resume'    # either 'resume' (read ckpt model) or a gpt2 variant (e.g. 'gpt2-xl')
+ckpt = 'out/ckpt.pt'    # file path to the model checkpoint
+start = "\n"            # or "<|endoftext|>" or etc. Can specify a file, use as: "FILE:prompt.txt"
 num_samples = 1         # number of samples to draw
 max_new_tokens = 500    # number of tokens generated in each sample
 temperature = 1.0       # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
@@ -52,7 +52,7 @@ ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=
 # model
 if init_from == 'resume':
     # init from a model saved in a specific directory
-    ckpt_path = os.path.join(out_dir, 'ckpt.pt')
+    ckpt_path = ckpt
     checkpoint = torch.load(ckpt_path, map_location=device, weights_only=True)
     gptconf = GPTConfig(**checkpoint['model_args'])
     model = GPT(gptconf)
