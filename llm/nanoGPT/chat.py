@@ -111,6 +111,7 @@ while True:
     input_tensor = torch.tensor(start_ids, dtype=torch.long, device=device).unsqueeze(0)
 
     # run generation
+    print("Model output:")
     with torch.no_grad():
         with ctx:
             for _ in range(num_samples):
@@ -120,6 +121,7 @@ while True:
                     continue
                 else:
                     # streaming generation - one token at a time
+                    print(prompt, end='', flush=True)
                     for _ in range(max_new_tokens):
                         output = model.generate(input_tensor, max_new_tokens=1, temperature=temperature, top_k=top_k)
                         next_token = output[:, -1:]  # Select the last token, maintaining the batch dimension
