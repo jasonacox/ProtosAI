@@ -12,11 +12,10 @@ time python3 train.py \
   --n_layer=4 \
   --n_head=4 \
   --n_embd=64 \
-  --compile=False \
-  --eval_iters=1 \
+  --compile=True \
   --block_size=64 \
   --batch_size=8 \
-  --device=cpu \
+  --device=auto \
   $2 $3 $4 $5 $6
 
 echo "Done."
