@@ -2,14 +2,14 @@
 
 This repo contains the Jupyter Notebooks used in the GenAI: LLM classes.
 
-## Classes
-
 <img width="445" alt="image" src="https://github.com/user-attachments/assets/67aafa9c-9711-4428-91ab-cdeb4151d047">
+
+## Classes
 
 * Large Language Models: How do they work? ([YouTube Video](https://youtu.be/s4zEQyM_Rks?si=-0ki7cW5z2vvKEcG)) ([Notebook](gpt.ipynb))
 * Retrieval Augmented Generation (RAG) ([YouTube Video](https://youtu.be/MyCWYweJniA?si=8Vl_JwBGuGQui5U4)) ([Notebook](rag.ipynb))
 
-Wiki on topics:  https://github.com/jasonacox/ProtosAI/wiki
+Wiki:  https://github.com/jasonacox/ProtosAI/wiki
 
 ## Additional References
 
