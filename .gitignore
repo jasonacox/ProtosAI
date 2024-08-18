@@ -17,3 +17,5 @@ llm/nanoGPT/data/tinystories/tinystories.txt
 llm/from_scratch/data/shakespeare.txt
 llm/from_scratch/__pycache__/model.cpython-310.pyc
 tts_output.wav
+llm/nanoGPT/data/qa/questions.txt
+llm/from_scratch/model.pt
