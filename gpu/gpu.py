@@ -29,27 +29,28 @@ if torch.cuda.is_available():
     # Get number of GPUs available
     gpus = torch.cuda.device_count()
 
-    # Get index of currently selected device
-    deviceno = torch.cuda.current_device()
-    name = torch.cuda.get_device_name(deviceno)
-
-    # Returns the global free and total GPU memory
-    (mem_free,gpu_mem) = torch.cuda.mem_get_info()
-
-    mem_free = mem_free / 1024**3
-    gpu_mem = gpu_mem / 1024**3
-    pct = (mem_free / gpu_mem) * 100
-
-    print(f"   Device #{deviceno}: {name}")
+    num_gpus = torch.cuda.device_count()
+    print(f"   Number of GPUs available: {num_gpus}")
     print(f"   Type: cuda {sim}")
-    print(f"   GPUs: {gpus}")
-    print()
-    print("Memory")
-    print(f"   GPU Total Memory: {gpu_mem} GB")
-    print(f"   GPU Free Memory: {mem_free} GB ({int(pct)}%)")
-    print('   Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
-    print('   Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
-    torch_device = torch.device("cuda")
+    
+    # List each GPU's name, free memory, and total memory
+    for i in range(num_gpus):
+        mem_free, mem_total = 0,0
+        gpu_name = torch.cuda.get_device_name(i)
+        capability = torch.cuda.get_device_capability(i)
+        cuda_device_name = f"cuda:{i}"
+        mem_free, mem_total = torch.cuda.mem_get_info(i)
+        mem_free_mb = mem_free / 1024**3
+        mem_total_mb = mem_total / 1024**3
+        pct = (mem_free / mem_total) * 100
+        print()
+        print(f"   GPU {i}: {gpu_name} - {cuda_device_name}")
+        print(f"      Compute Capability: {capability[0]}.{capability[1]}")
+        print(f"      Memory: {mem_total_mb:.2f} GB")
+        print(f"         Used: {mem_total_mb-mem_free_mb:.2f} GB ({100-int(pct)}%)")
+        print(f"         Free: {mem_free_mb:.2f} GB ({int(pct)}%)")
+        cuda_device_name = f"cuda:{i}"
+    torch_device = torch.device(cuda_device_name)
 
 # Check PyTorch has access to Apple MPS (Metal Performance Shader)
 if torch.backends.mps.is_available():
