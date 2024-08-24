@@ -6,6 +6,12 @@ This project consist of a collection of scripts that explore capabilities provid
 
 Google Colab Example: [ProtosAI.ipynb](https://colab.research.google.com/drive/1gAeHW5ViKXLWQbbm48FxKehbM0A0FI7M?usp=sharing)
 
+Classes: 
+
+* Large Language Models: How do they work? ([YouTube Video](https://youtu.be/s4zEQyM_Rks?si=-0ki7cW5z2vvKEcG)) ([Notebook](gpt.ipynb))
+* Retrieval Augmented Generation (RAG) ([YouTube Video](https://youtu.be/MyCWYweJniA?si=8Vl_JwBGuGQui5U4)) ([Notebook](rag.ipynb))
+
+
 ## Setup
 
 Setup required for these scripts:
