@@ -1,3 +1,13 @@
+!/usr/bin/python3
+"""
+Checkpoint Generator Example
+
+Python script to load a GPT model checkpoint and generate text.
+
+Author: Jason A. Cox
+17 August 2024
+https://github.com/jasonacox/ProtosAI
+"""
 import sys
 import time
 from contextlib import nullcontext
