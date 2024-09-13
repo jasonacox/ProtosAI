@@ -7,6 +7,7 @@ https://github.com/openai/gpt-2/blob/master/src/model.py
 https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py
 """
 
+import time
 import math
 import inspect
 from dataclasses import dataclass
@@ -14,6 +15,8 @@ from dataclasses import dataclass
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+
+import tiktoken
 
 @torch.jit.script # good to enable when not using torch.compile, disable when using (our default)
 def new_gelu(x):
@@ -24,7 +27,9 @@ def new_gelu(x):
     return 0.5 * x * (1.0 + torch.tanh(math.sqrt(2.0 / math.pi) * (x + 0.044715 * torch.pow(x, 3.0))))
 
 class LayerNorm(nn.Module):
-    """ LayerNorm but with an optional bias. PyTorch doesn't support simply bias=False """
+    """ 
+    LayerNorm but with an optional bias. PyTorch doesn't support simply bias=False 
+    """
 
     def __init__(self, ndim, bias):
         super().__init__()
@@ -35,6 +40,9 @@ class LayerNorm(nn.Module):
         return F.layer_norm(input, self.weight.shape, self.weight, self.bias, 1e-5)
 
 class CausalSelfAttention(nn.Module):
+    """
+    A vanilla multi-head masked self-attention layer with a projection at the end.
+    """
 
     def __init__(self, config):
         super().__init__()
@@ -84,6 +92,9 @@ class CausalSelfAttention(nn.Module):
         return y
 
 class MLP(nn.Module):
+    """
+    Very simple multi-layer perceptron (also called FFN) with GELU activation.
+    """
 
     def __init__(self, config):
         super().__init__()
@@ -99,6 +110,9 @@ class MLP(nn.Module):
         return x
 
 class Block(nn.Module):
+    """
+    An unassuming Transformer block.
+    """
 
     def __init__(self, config):
         super().__init__()
@@ -114,6 +128,9 @@ class Block(nn.Module):
 
 @dataclass
 class GPTConfig:
+    """
+    A class to hold model configuration parameters and defaults.
+    """
     block_size: int = 1024
     vocab_size: int = 50304 # GPT-2 vocab_size of 50257, padded up to nearest multiple of 64 for efficiency
     n_layer: int = 12
@@ -123,7 +140,9 @@ class GPTConfig:
     bias: bool = True # True: bias in Linears and LayerNorms, like GPT-2. False: a bit better and faster
 
 class GPT(nn.Module):
-
+    """
+    The full GPT language model, with a context size of block_size.
+    """
     def __init__(self, config):
         super().__init__()
         assert config.vocab_size is not None
@@ -151,9 +170,6 @@ class GPT(nn.Module):
             if pn.endswith('c_proj.weight'):
                 torch.nn.init.normal_(p, mean=0.0, std=0.02/math.sqrt(2 * config.n_layer))
 
-        # report number of parameters
-        print("Number of parameters: %.2fM" % (self.get_num_params()/1e6,))
-
     def get_num_params(self, non_embedding=True):
         """
         Return the number of parameters in the model.
@@ -165,7 +181,7 @@ class GPT(nn.Module):
         if non_embedding:
             n_params -= self.transformer.wpe.weight.numel()
         return n_params
-
+            
     def _init_weights(self, module):
         if isinstance(module, nn.Linear):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
@@ -335,3 +351,43 @@ class GPT(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1)
 
         return idx
+
+    @torch.no_grad()
+    def generate_print(self, idx, max_new_tokens, temperature=1.0, top_k=None, delay=0.005):
+        """
+        Similar to generate() but print each token as it is generated. Add delay between words
+        if specified and set max_new_tokens to None for infinite generation.
+        """
+        enc = tiktoken.get_encoding("gpt2")
+        count = 1 if not max_new_tokens else max_new_tokens
+        while count:
+            if max_new_tokens:
+                count = count - 1
+            # if the sequence context is growing too long we must crop it at block_size
+            idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]
+            # forward the model to get the logits for the index in the sequence
+            logits, _ = self(idx_cond)
+            # pluck the logits at the final step and scale by desired temperature
+            logits = logits[:, -1, :] / temperature
+            # optionally crop the logits to only the top k options
+            if top_k is not None:
+                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+                logits[logits < v[:, [-1]]] = -float('Inf')
+            # apply softmax to convert logits to (normalized) probabilities
+            probs = F.softmax(logits, dim=-1)
+            # sample from the distribution
+            idx_next = torch.multinomial(probs, num_samples=1)
+            # append sampled index to the running sequence and continue
+            idx = torch.cat((idx, idx_next), dim=1)
+            # print 
+            output = idx_next[0].tolist()
+            for w in output:
+                if w > 50257: # max token value, ignore the rest
+                    continue
+                else:
+                    time.sleep(delay)
+                    text = enc.decode([w])
+                    if text == '\n':
+                        print()
+                    else:
+                        print(text, end='', flush=True)

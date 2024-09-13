@@ -1,14 +1,3 @@
-#!/usr/bin/python3
-"""
-Checkpoint Generator Example
-
-Python script to load a GPT model checkpoint and generate text.
-
-Author: Jason A. Cox
-17 August 2024
-https://github.com/jasonacox/ProtosAI
-
-"""
 import sys
 import time
 from contextlib import nullcontext
@@ -21,7 +10,7 @@ if len(sys.argv) > 1:
 else:
     checkpoint_file = input("Enter checkpoint file: ")
 
-print(f"Checkpoint: {checkpoint_file}")
+print(f"Loading Checkpoint: {checkpoint_file}")
 
 # inference parameters
 max_tokens = 500 # number of tokens generated in each sample
@@ -42,6 +31,7 @@ ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=
 # load model saved in a specific directory
 checkpoint = torch.load(checkpoint_file, map_location=device, weights_only=True)
 gptconf = GPTConfig(**checkpoint['model_args'])
+print(gptconf) 
 model = GPT(gptconf)
 state_dict = checkpoint['model']
 unwanted_prefix = '_orig_mod.'
@@ -51,13 +41,24 @@ for k,v in list(state_dict.items()):
 model.load_state_dict(state_dict)
 model.eval()
 model.to(device)
-enc = tiktoken.get_encoding("gpt2")
+print("Number of parameters: %.2fM" % (model.get_num_params()/1e6,))
 
 # set prompt
+enc = tiktoken.get_encoding("gpt2")
 prompt = "\n"
+print("")
 start_ids = enc.encode(prompt, allowed_special={"<|endoftext|>"})
 x = (torch.tensor(start_ids, dtype=torch.long, device=device)[None, ...])
 
+with torch.no_grad():
+    try:
+        with ctx:
+            model.generate_print(x, None, temperature=temperature, top_k=top_k)
+    except KeyboardInterrupt:
+        print("\n ** User Break **")
+
+print("")
+"""
 # run generation
 with torch.no_grad():
     with ctx:
@@ -67,11 +68,12 @@ with torch.no_grad():
             if w > 50257: # max token value, ignore the rest
                 continue
             else:
-                time.sleep(0.005) # artificial token delay
+                time.sleep(0.005)
                 text = enc.decode([w])
                 if text == '\n':
                     print()
                 else:
                     print(text, end='', flush=True)
-
+                
 print("")
+"""
